@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExercicioController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TreinoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,4 +28,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::group(['middleware' => 'auth'], function(){
     Route::resource('exercicios', ExercicioController::class);
     Route::resource('users', UserController::class);
+    Route::resource('treinos', TreinoController::class);
 });

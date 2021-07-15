@@ -30,6 +30,13 @@
                         </x-jet-nav-link>
                     </div>
                 @endcan
+                @can('treino_access', Treino::class)
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-jet-nav-link href="{{ route('treinos.index') }}" :active="request()->routeIs('treinos.*')">
+                            Treinos
+                        </x-jet-nav-link>
+                    </div>
+                @endcan
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
