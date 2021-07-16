@@ -10,5 +10,14 @@ class Treino extends Model
     use HasFactory;
 
     protected $fillable = ['tipo', 'dia', 'descricao'];
+
+    public function exercicios()
+    {
+        return $this->belongsToMany(Exercicio::class)
+        ->withTimestamps()
+        ->withPivot(['serie'])
+        ->using(ExercicioTreino::class);
+    }
+
 }
 

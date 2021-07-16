@@ -16,8 +16,6 @@ class CreateExercicioTreinoTable extends Migration
         Schema::create('exercicio_treino', function (Blueprint $table) {
             $table->id();
             $table->string('serie');
-            $table->string('repeticoes');
-            $table->string('descricao');
             $table->foreignId('exercicio_id')->references('id')->on('exercicios')->cascadeOnDelete();
             $table->foreignId('treino_id')->references('id')->on('treinos')->cascadeOnDelete();
             $table->timestamps();

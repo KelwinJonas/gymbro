@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTreinoRequest;
 use App\Http\Requests\UpdateTreinoRequest;
+use App\Models\Exercicio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Treino;
@@ -35,7 +36,7 @@ class TreinoController extends Controller
     {
         abort_if(Gate::denies('treino_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('treinos.create');
+        return view('treinos.create', ['exercicios' => Exercicio::all(), ]);
     }
 
     /**
@@ -46,9 +47,20 @@ class TreinoController extends Controller
      */
     public function store(StoreTreinoRequest $request)
     {
-        Treino::create($request->validated());
+        $data = $request->validated();
+
+        $treino = Treino::create($data);
+
+        $treino->exercicios()->sync($this->mapExercicios($data['exercicios']));
 
         return redirect()->route('treinos.index');
+    }
+
+    private function mapExercicios($exercicios)
+    {
+        return collect($exercicios)->map(function ($i) {
+            return ['serie' => $i];
+        });
     }
 
     /**
@@ -74,7 +86,17 @@ class TreinoController extends Controller
     {
         abort_if(Gate::denies('treino_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('treinos.edit', compact('treino'));
+        $treino->load('exercicios');
+
+        $exercicios = Exercicio::get()->map(function($exercicio) use ($treino) {
+            $exercicio->value = data_get($treino->exercicios->firstWhere('id', $exercicio->id), 'pivot.serie') ?? null;
+            return $exercicio;
+        });
+
+        return view('treinos.edit', [
+            'exercicios' => $exercicios,
+            'treino' => $treino,
+        ]);
     }
 
     /**
@@ -86,7 +108,12 @@ class TreinoController extends Controller
      */
     public function update(UpdateTreinoRequest $request, Treino $treino)
     {
-        $treino->update($request->validated());
+
+        $data = $request->validated();
+
+        $treino->update($data);
+
+        $treino->exercicios()->sync($this->mapExercicios($data['exercicios']));
 
         return redirect()->route('treinos.index');
     }

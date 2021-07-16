@@ -35,6 +35,13 @@ class StoreTreinoRequest extends FormRequest
             'descricao' => [
                 'required',
             ],
+            'exercicios.*' => [
+                'string',
+            ],
+            'exercicios'   => [
+                'required',
+                'array',
+            ],
         ];
     }
 }
