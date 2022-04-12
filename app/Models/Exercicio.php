@@ -9,5 +9,5 @@ class Exercicio extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'grupo_muscular', 'descricao', 'novo'];
+    protected $fillable = ['nome', 'grupo_muscular', 'descricao', 'novo', 'outro'];
 }
